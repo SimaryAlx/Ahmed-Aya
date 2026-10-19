@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ahmed & Aya</title>
+  <meta name="description" content="Ahmed & Aya's wedding — 1-1-2027, 6:00 PM to 7:30 PM, Al Aly Al Azeem Mosque, Heliopolis">
+  <meta property="og:title" content="Ahmed & Aya — Wedding">
+  <meta property="og:description" content="1-1-2027 · 6:00 PM – 7:30 PM · Al Aly Al Azeem Mosque, Heliopolis">
+  <meta property="og:image" content="assets/couple.png">
+  <link href="assets/fonts/fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --wine: #66001f;
+      --rose: #b54e6d;
+      --blush: #e8b8b4;
+      --card: #ffdee5;
+      --gold-brown: #5c420c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: #fff url("assets/watercolor.png") center / cover fixed;
+      color: var(--rose);
+      font-family: "Josefin Sans", sans-serif;
+      overflow-x: hidden;
+    }
+    body.locked { overflow: hidden; }
+    img { display: block; max-width: 100%; }
+
+    /* ───────── Envelope (intro) ───────── */
+    .envelope {
+      position: fixed; inset: 0; z-index: 50;
+      background: url("assets/envelope.png") center / cover;
+      cursor: pointer;
+      transition: opacity .8s ease 1s, visibility 0s linear 1.8s;
+    }
+    .flap {
+      position: absolute; inset: 0;
+      filter: drop-shadow(0 0 6px rgba(70, 20, 30, .45));
+      transition: transform 1.1s cubic-bezier(.6, 0, .3, 1);
+    }
+    .flap::before {
+      content: ""; position: absolute; inset: 0;
+      background: url("assets/envelope.png") center / cover;
+    }
+    .flap.top::before    { clip-path: polygon(0 0, 100% 0, 50% 50%); filter: brightness(1.04); }
+    .flap.bottom::before { clip-path: polygon(0 100%, 100% 100%, 50% 50%); filter: brightness(.98); }
+    .seal-wrap {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex; flex-direction: column; align-items: center;
+      transition: transform .7s ease, opacity .6s ease;
+    }
+    .seal {
+      width: min(40vw, 190px);
+      filter: drop-shadow(0 6px 10px rgba(60, 0, 20, .35));
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    .tap {
+      margin-top: 14px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(18px, 4.6vw, 26px);
+      color: var(--gold-brown);
+    }
+    .tap-line { width: min(19vw, 90px); margin-top: 2px; }
+    @keyframes pulse { 50% { transform: scale(1.04); } }
+
+    .envelope.open { opacity: 0; visibility: hidden; pointer-events: none; }
+    .envelope.open .flap.top    { transform: translateY(-100%); }
+    .envelope.open .flap.bottom { transform: translateY(100%); }
+    .envelope.open .seal-wrap   { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+
+    /* ───────── Invitation ───────── */
+    main {
+      position: relative;
+      max-width: 480px; margin: 0 auto;
+      background: #fff;
+      box-shadow: 0 0 40px rgba(181, 78, 109, .18);
+      overflow: hidden;
+    }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 1s ease, transform 1s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      background: url("assets/watercolor.png") center top / 260% auto no-repeat;
+      padding: 96px 0 0;
+      min-height: 640px;
+    }
+    .petals { position: absolute; width: 36%; pointer-events: none; }
+    .petals.tl { top: 4px; left: -6%; }
+    .petals.tr { top: 4px; right: -6%; transform: scaleX(-1); }
+    .petals.bl { bottom: 4px; left: -8%; width: 24%; transform: scaleY(-1); }
+    .petals.br { bottom: 4px; right: -8%; width: 24%; transform: scale(-1, -1); }
+
+    .names {
+      font-family: "Pinyon Script", cursive;
+      color: var(--wine);
+      font-size: clamp(38px, 11vw, 52px);
+      line-height: 1.1;
+      text-align: center;
+      display: flex; align-items: flex-end; justify-content: center; gap: 4px;
+      white-space: nowrap;
+    }
+    .names .heart { width: .45em; margin-bottom: .15em; }
+    .when {
+      margin-top: 34px; text-align: center;
+      text-transform: uppercase; font-weight: 300;
+      letter-spacing: .35em; line-height: 1.55;
+      font-size: clamp(13px, 3.6vw, 16px);
+    }
+    .couple { width: 76%; margin: 34px 0 0 3%; }
+
+    /* Invite text */
+    .invite { position: relative; padding: 70px 0 40px; text-align: center; }
+    .names.big { font-size: clamp(40px, 12vw, 56px); gap: 14px; align-items: center; }
+    .names .hearts { width: .62em; height: .62em; fill: #c97b92; }
+    .invite p {
+      margin-top: 46px;
+      font-family: "Italianno", cursive;
+      font-size: clamp(30px, 8.6vw, 38px);
+      line-height: 1.25;
+      color: var(--rose);
+    }
+    .invite .date {
+      display: block; font-size: 1.45em; letter-spacing: .08em; line-height: 1.2;
+    }
+    .flourish { width: 46px; margin: 46px auto 0; }
+
+    /* Countdown */
+    .countdown {
+      position: relative;
+      margin: 30px 16px 0;
+      background: var(--card);
+      border-radius: 22px;
+      padding: 20px 10px 18px;
+      text-align: center;
+      color: var(--wine);
+    }
+    .countdown h3 {
+      font-family: "Courier Prime", monospace; font-weight: 700;
+      font-size: 13px; letter-spacing: .02em; margin-bottom: 4px;
+    }
+    .timer { display: flex; justify-content: center; align-items: flex-start; }
+    .unit { min-width: 64px; }
+    .num {
+      font-family: "Bodoni Moda", serif;
+      font-size: clamp(30px, 9vw, 40px); line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+    .sep { font-family: "Bodoni Moda", serif; font-size: clamp(30px, 9vw, 40px); line-height: 1.05; padding: 0 2px; }
+    .lbl { font-family: "Bodoni Moda", serif; font-size: 8px; letter-spacing: .05em; text-transform: uppercase; margin-top: 4px; }
+    .countdown .fl { position: absolute; width: 50px; pointer-events: none; }
+    .countdown .fl.a { top: -14px; right: 26px; transform: rotate(-27deg); }
+    .countdown .fl.b { bottom: -18px; left: 22px; transform: rotate(163deg); }
+    .countdown.done .timer { display: none; }
+
+    /* Venue */
+    .venue { text-align: center; padding: 30px 0 0; }
+    .venue h2 {
+      font-family: "Pinyon Script", cursive; font-weight: 400;
+      font-size: clamp(46px, 13vw, 60px); line-height: .9;
+      color: var(--rose);
+      text-shadow: 0 2px 3px rgba(102, 0, 31, .12);
+    }
+    .venue .place {
+      font-family: "Federo", serif;
+      text-transform: uppercase;
+      font-size: clamp(26px, 7.6vw, 34px); line-height: 1.1;
+      color: var(--blush);
+      text-shadow: 0 1px 2px rgba(102, 0, 31, .12);
+    }
+    .venue .address {
+      margin-top: 10px; font-weight: 300; font-size: 14px; line-height: 1.6;
+      letter-spacing: .04em; color: var(--rose);
+    }
+    .calendar { text-align: center; padding: 56px 16px 0; }
+    .calendar h2 {
+      font-family: "Pinyon Script", cursive; font-weight: 400;
+      font-size: clamp(40px, 11vw, 52px); color: var(--wine); line-height: 1;
+    }
+    .calendar p {
+      margin-top: 12px; text-transform: uppercase; font-weight: 300;
+      letter-spacing: .2em; line-height: 1.7; font-size: 14px;
+    }
+    .cal-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 4px; }
+    .cal-btns .map-btn { cursor: pointer; font-size: 12px; padding: 10px 18px; }
+    .map-btn.outline { background: transparent; color: var(--wine); box-shadow: inset 0 0 0 1.5px var(--wine); }
+    .note { text-align: center; padding: 40px 24px 0; }
+    .note .flourish { margin-top: 0; }
+    .note h3 {
+      margin-top: 18px; font-family: "Pinyon Script", cursive; font-weight: 400;
+      font-size: 40px; color: var(--rose);
+    }
+    .note p {
+      margin: 8px auto 0; max-width: 320px;
+      font-family: "Italianno", cursive; font-size: 32px; line-height: 1.2; color: var(--wine);
+    }
+    .pin { display: block; width: 26px; height: 40px; margin: 30px auto; fill: var(--wine); }
+    .pin svg { width: 100%; height: 100%; }
+    .map {
+      display: block; width: calc(100% - 32px); aspect-ratio: 1; margin: 0 16px;
+      border: 0; border-radius: 4px;
+    }
+    .map-btn {
+      display: inline-block; margin: 18px auto 0;
+      padding: 10px 26px; border-radius: 999px;
+      background: var(--wine); color: #fff; text-decoration: none;
+      font-size: 14px; letter-spacing: .15em; text-transform: uppercase;
+    }
+    .bottom-wash {
+      height: 220px; margin-top: 40px;
+      background: url("assets/watercolor.png") center bottom / 260% auto no-repeat;
+    }
+
+    /* Music toggle */
+    .music {
+      position: fixed; right: 14px; bottom: 14px; z-index: 40;
+      width: 44px; height: 44px; border-radius: 50%; border: 0;
+      background: var(--wine); color: #fff; font-size: 20px; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(102, 0, 31, .3);
+      display: none;
+    }
+    .music.show { display: block; }
+    .music.paused { opacity: .55; }
+  </style>
+</head>
+<body class="locked">
+
+  <!-- Envelope intro: tap to open -->
+  <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Tap to open the invitation">
+    <div class="flap top"></div>
+    <div class="flap bottom"></div>
+    <div class="seal-wrap">
+      <img class="seal" src="assets/seal.png" alt="">
+      <div class="tap">Tap to open</div>
+      <img class="tap-line" src="assets/flourish-line.png" alt="">
+    </div>
+  </div>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <img class="petals tl" src="assets/petals.png" alt="">
+      <img class="petals tr" src="assets/petals.png" alt="">
+      <img class="petals bl" src="assets/petals.png" alt="">
+      <img class="petals br" src="assets/petals.png" alt="">
+
+      <h1 class="names reveal">Ahmed <img class="heart" src="assets/heart.png" alt="♥"> Aya</h1>
+      <div class="when reveal">1-1-2027<br>6:00 PM – 7:30 PM</div>
+      <img class="couple reveal" src="assets/couple.png" alt="Bride and groom">
+    </section>
+
+    <!-- Invitation -->
+    <section class="invite">
+      <div class="names big reveal">Ahmed <svg class="hearts" viewBox="0 -1.9 126.5 127.9" aria-hidden="true"><path d="M123.762,31.096c-0.925-12.244-4.87-21.055-11.727-26.189c-9.036-6.766-19.717-4.593-20.08-4.511 C91.258,0.483,75.35,2.803,76.648,31.871C55.27,11.93,43.094,22.195,42.631,22.605c-0.265,0.198-6.217,4.732-8.690,12.683 c-2.408-1.197-4.245-1.347-4.448-1.357c-0.457-0.062-11.272-1.441-19.774,5.979C3.27,45.537,0,54.614,0,66.89 c0,35.858,23.541,58.625,23.779,58.85c0.187,0.177,0.433,0.275,0.688,0.275c0.018,0,0.036,0,0.054-0.001 c0.324-0.018,32.681-2.056,56.288-29.228c2.218-2.553,4.078-5.082,5.604-7.583c9.222,2.203,15.984,2.336,17.410,2.336 c0.149,0,0.24-0.001,0.27-0.002c0.275-0.005,0.537-0.124,0.723-0.329C105.033,90.969,126.462,66.855,123.762,31.096z M79.3,95.474 c-21.561,24.815-50.570,28.167-54.452,28.509C22.097,121.193,2,99.669,2,66.89c0-11.661,3.033-20.226,9.016-25.458 c5.628-4.922,12.553-5.623,16.046-5.623c1.351,0,2.188,0.104,2.237,0.111c0.157,0.009,15.682,1.257,15.682,30.970 c0,0.417,0.259,0.791,0.65,0.937c0.387,0.146,0.831,0.034,1.104-0.281c19.48-22.42,31.759-13.565,32.338-13.131 c0.087,0.056,8.696,5.702,10.147,15.862C90.343,78.129,87.005,86.606,79.3,95.474z M103.618,89.536 c-1.665-0.019-7.910-0.229-16.160-2.141c3.279-6.006,4.544-11.840,3.739-17.427c-1.595-11.073-10.660-16.991-10.974-17.188 c-0.554-0.427-13.457-9.930-33.282,11.537c-0.530-17.357-6.421-24.805-11.217-27.998c2.196-7.586,8.046-12.068,8.162-12.159 c0.483-0.419,12.094-10.003,33.210,10.917c0.297,0.293,0.746,0.373,1.123,0.197c0.379-0.175,0.609-0.567,0.578-0.983 C76.571,4.806,91.566,2.465,92.285,2.367c0.103-0.022,10.274-2.071,18.571,4.156c6.361,4.775,10.032,13.094,10.911,24.724 C124.232,63.882,106.126,86.567,103.618,89.536z"/></svg> Aya</div>
+      <p class="reveal">
+        we invite you to celebrate<br>
+        the most special day<br>
+        in our lives<br>
+        our wedding on ,<br>
+        <span class="date">1-1-2027</span>
+        starts at 6:00PM<br>
+        ends at 7:30PM
+      </p>
+      <img class="flourish reveal" src="assets/flourish.png" alt="">
+    </section>
+
+    <!-- Countdown -->
+    <section class="countdown reveal" id="countdown">
+      <img class="fl a" src="assets/flowers.png" alt="">
+      <img class="fl b" src="assets/flowers.png" alt="">
+      <h3 id="cd-title">until our special day</h3>
+      <div class="timer">
+        <div class="unit"><div class="num" id="d">0</div><div class="lbl">Days</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="h">00</div><div class="lbl">Hours</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="m">00</div><div class="lbl">Minutes</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="s">00</div><div class="lbl">Seconds</div></div>
+      </div>
+    </section>
+
+    <!-- Venue -->
+    <section class="venue">
+      <h2 class="reveal">Venue</h2>
+      <div class="place reveal">Al Aly Al Azeem Mosque</div>
+      <div class="address reveal">38QX+8C5, Almazah, Heliopolis,<br>Cairo Governorate 4461152</div>
+      <a class="pin reveal" href="https://www.google.com/maps/search/?api=1&query=30.088263,31.348609" target="_blank" rel="noopener" aria-label="Open location in Google Maps"><svg viewBox="17.7 2.9 54.3 81.5"><path d="M44.849,2.873c-15.001,0-27.166,12.165-27.166,27.172c0,15.001,27.166,54.326,27.166,54.326s27.166-39.325,27.166-54.326 C72.015,15.038,59.85,2.873,44.849,2.873z M44.849,42.907c-7.897,0-14.298-6.395-14.298-14.299c0-7.891,6.401-14.292,14.298-14.292 s14.292,6.401,14.292,14.292C59.141,36.512,52.746,42.907,44.849,42.907z"/></svg></a>
+      <iframe class="map reveal" title="Al Aly Al Azeem Mosque — map"
+        src="https://maps.google.com/maps?q=30.088263,31.348609&z=17&hl=en&output=embed"
+        loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=30.088263,31.348609" target="_blank" rel="noopener">Open in Maps</a>
+    </section>
+
+    <!-- Calendar -->
+    <section class="calendar reveal">
+      <h2>Save the Date</h2>
+      <p>Friday, 1 January 2027<br>6:00 PM – 7:30 PM</p>
+      <div class="cal-btns">
+        <a class="map-btn" id="gcal" target="_blank" rel="noopener">Google Calendar</a>
+        <a class="map-btn outline" id="ics" download="Ahmed-Aya-Wedding.ics">Apple / Outlook</a>
+      </div>
+    </section>
+
+    <!-- Notes -->
+    <section class="note reveal">
+      <img class="flourish" src="assets/flourish.png" alt="">
+      <h3>Notes</h3>
+      <p>Please note that kids are not allowed</p>
+    </section>
+
+    <div class="bottom-wash"></div>
+  </main>
+
+  <!-- Optional background music: put a file at assets/music.mp3 and it will play after opening -->
+  <audio id="music" src="assets/music.mp3" loop preload="none"></audio>
+  <button class="music" id="musicBtn" aria-label="Toggle music">♫</button>
+
+  <script>
+    // Wedding: 1 Jan 2027, 6:00–7:30 PM Cairo time (UTC+2 in winter)
+    const WEDDING = new Date("2027-01-01T18:00:00+02:00").getTime();
+
+    // ── Add to calendar ──
+    const EV = {
+      title: "Ahmed & Aya Wedding",
+      start: "20270101T160000Z", end: "20270101T173000Z",
+      location: "Al Aly Al Azeem Mosque, 38QX+8C5, Almazah, Heliopolis, Cairo Governorate 4461152",
+      details: "Please note that kids are not allowed."
+    };
+    document.getElementById("gcal").href = "https://calendar.google.com/calendar/render?action=TEMPLATE"
+      + "&text=" + encodeURIComponent(EV.title)
+      + "&dates=" + EV.start + "/" + EV.end
+      + "&location=" + encodeURIComponent(EV.location)
+      + "&details=" + encodeURIComponent(EV.details);
+    const ics = [
+      "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Ahmed & Aya//Wedding//EN", "BEGIN:VEVENT",
+      "UID:ahmed-aya-20270101@wedding", "DTSTAMP:20261019T000000Z",
+      "DTSTART:" + EV.start, "DTEND:" + EV.end,
+      "SUMMARY:" + EV.title, "LOCATION:" + EV.location.replace(/,/g, "\\,"),
+      "DESCRIPTION:" + EV.details, "END:VEVENT", "END:VCALENDAR"
+    ].join("\r\n");
+    document.getElementById("ics").href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+
+    // ── Envelope ──
+    const env = document.getElementById("envelope");
+    const music = document.getElementById("music");
+    const musicBtn = document.getElementById("musicBtn");
+    function openEnvelope() {
+      if (env.classList.contains("open")) return;
+      env.classList.add("open");
+      document.body.classList.remove("locked");
+      window.scrollTo(0, 0);
+      setTimeout(revealVisible, 900);
+      music.play().then(() => musicBtn.classList.add("show")).catch(() => {});
+    }
+    env.addEventListener("click", openEnvelope);
+    env.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") openEnvelope(); });
+    musicBtn.addEventListener("click", () => {
+      if (music.paused) { music.play(); musicBtn.classList.remove("paused"); }
+      else { music.pause(); musicBtn.classList.add("paused"); }
+    });
+
+    // ── Scroll reveal ──
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting && env.classList.contains("open")) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { threshold: .15 });
+    const reveals = document.querySelectorAll(".reveal");
+    reveals.forEach(el => io.observe(el));
+    function revealVisible() {
+      reveals.forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < innerHeight && r.bottom > 0) { el.classList.add("in"); io.unobserve(el); }
+      });
+    }
+
+    // ── Countdown ──
+    const pad = n => String(n).padStart(2, "0");
+    const els = {};
+    ["d", "h", "m", "s"].forEach(k => els[k] = document.getElementById(k));
+    function tick() {
+      let diff = Math.max(0, WEDDING - Date.now());
+      if (diff === 0) {
+        document.getElementById("countdown").classList.add("done");
+        document.getElementById("cd-title").textContent = "Today is our special day ♥";
+        return;
+      }
+      diff = Math.floor(diff / 1000);
+      els.d.textContent = Math.floor(diff / 86400);
+      els.h.textContent = pad(Math.floor(diff % 86400 / 3600));
+      els.m.textContent = pad(Math.floor(diff % 3600 / 60));
+      els.s.textContent = pad(diff % 60);
+      setTimeout(tick, 1000);
+    }
+    tick();
+  </script>
+</body>
+</html>
